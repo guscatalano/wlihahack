@@ -1,0 +1,14 @@
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\obj\Debug\netstandard2.0\WlihaInputUI.csprojAssemblyReference.cache
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\obj\Debug\netstandard2.0\App.xaml.g.cs
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\obj\Debug\netstandard2.0\MainPage.xaml.g.cs
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\obj\Debug\netstandard2.0\WlihaInputUI.csproj.CoreCompileInputs.cache
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\obj\Debug\netstandard2.0\WlihaInputUI.AssemblyInfoInputs.cache
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\obj\Debug\netstandard2.0\WlihaInputUI.AssemblyInfo.cs
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\bin\Debug\netstandard2.0\WlihaInputUI.deps.json
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\bin\Debug\netstandard2.0\WlihaInputUI.dll
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\bin\Debug\netstandard2.0\ref\WlihaInputUI.dll
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\bin\Debug\netstandard2.0\WlihaInputUI.pdb
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\obj\Debug\netstandard2.0\XamlC.stamp
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\obj\Debug\netstandard2.0\WlihaInputUI.dll
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\obj\Debug\netstandard2.0\ref\WlihaInputUI.dll
+E:\wlihahack\Input\WlihaInputUI\WlihaInputUI\WlihaInputUI\obj\Debug\netstandard2.0\WlihaInputUI.pdb
