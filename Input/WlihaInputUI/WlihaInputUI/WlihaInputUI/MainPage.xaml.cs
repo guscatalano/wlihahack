@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using Xamarin.Forms;
 
@@ -12,6 +13,9 @@ namespace WlihaInputUI
         {
             InitializeComponent();
 
+#if DEBUG
+            DebugControls.IsVisible = true;
+#endif
             if (File.Exists(_fileName))
             {
                 editor.Text = File.ReadAllText(_fileName);
@@ -30,6 +34,11 @@ namespace WlihaInputUI
                 File.Delete(_fileName);
             }
             editor.Text = string.Empty;
+        }
+
+        void OnMapTestClicked(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new MapTester());
         }
     }
 }
