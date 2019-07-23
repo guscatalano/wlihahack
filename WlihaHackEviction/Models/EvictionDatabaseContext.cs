@@ -15,6 +15,7 @@ namespace WlihaHackEviction.Models
 
         public DbSet<TenantInfo> DBTenantInfo { get; set; }
         public DbSet<AddressInfo> DBAddressInfo{ get; set; }
+        public DbSet<EvictionInfo> DBEvictionInfo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
