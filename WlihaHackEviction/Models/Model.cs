@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WlihaHackEviction.Models
 {
@@ -21,6 +22,11 @@ namespace WlihaHackEviction.Models
         public int NumberOfPpl { get; set; }
         [DataMember]
         public int AddressId { get; set; }
+
+        public static implicit operator TenantInfo(ActionResult<TenantInfo> v)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     [DataContract]
