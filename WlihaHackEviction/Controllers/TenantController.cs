@@ -43,11 +43,52 @@ namespace WlihaHackEviction.Controllers
 
         // POST api/Tenant
         [HttpPost]
-        public async Task NewTenantAsync([FromBody] TenantInfo tenantInfo)
+        public async Task NewTenantAsync([FromBody] CompleteTenantEvictionInfo info)
         {
-            // ToDo: insert into Actual DB
-             _dbContext.DBTenantInfo.Add(tenantInfo);
-            await _dbContext.SaveChangesAsync();
+            TenantInfo tenantInfo = info.TenantInfo;
+            AddressInfo addressInfo = info.AddressInfo;
+            EvictionInfo evictionInfo = info.EvictionInfo;
+
+            // Null-check for all required fields
+            if (tenantInfo == null || addressInfo == null || evictionInfo == null)
+            {
+                // don't insert anything
+            }
+
+            if (tenantInfo.Name == null || tenantInfo.Email == null ||
+                addressInfo.StreetAddress == null || addressInfo.City == null || addressInfo.County == null || addressInfo.ZipCode == 0)
+            {
+                // don't insert anything
+            }
+            try
+            {
+                _dbContext.DBTenantInfo.Add(tenantInfo);
+                _dbContext.DBAddressInfo.Add(addressInfo);
+                await _dbContext.SaveChangesAsync();
+                // Get TenantId and AddressId
+                var tenantId = _dbContext.DBTenantInfo
+                    .Where(t => t.Name == tenantInfo.Name && t.Email == tenantInfo.Email)
+                    .Select(t => t.Id);
+
+                var addressId = _dbContext.DBAddressInfo
+                    .Where(a => a.StreetAddress == addressInfo.StreetAddress && a.ZipCode == addressInfo.ZipCode)
+                    .Select(a => a.Id);
+                
+            }
+            // the only exception we should be getting here is the duplicate insertion - on which we just swallow the exception
+            // we take care of the nulls above
+            // rest we assume that the data is in correct format
+            catch (Exception)
+            {
+                // swallow it
+            }
+
+
+
+            
+            //_dbContext.DBEvictionInfo.Add(evictionInfo);
+
+            
         }
 
         // PUT api/Tenant/5
