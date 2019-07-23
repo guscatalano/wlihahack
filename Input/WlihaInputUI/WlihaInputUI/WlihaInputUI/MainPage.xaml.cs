@@ -36,9 +36,10 @@ namespace WlihaInputUI
             editor.Text = string.Empty;
         }
 
-        void OnMapTestClicked(object sender, EventArgs e)
+        async void OnMapTestClicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new MapTester());
+            String result = await AddressPicker.ModalPickAddressFromGPS(Navigation);
+            await DisplayAlert("Picked Address", result, "OK");
         }
     }
 }
