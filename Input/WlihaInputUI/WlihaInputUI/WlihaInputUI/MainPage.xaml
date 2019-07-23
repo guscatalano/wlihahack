@@ -20,5 +20,9 @@
                     Text="Delete"
                     Clicked="OnDeleteButtonClicked"/>
         </Grid>
+        <StackLayout x:Name="DebugControls" IsVisible="False">
+            <Label Text="Debug controls, only visible in debug builds" HorizontalOptions="Center" />
+            <Button Text="Map Test" Clicked="OnMapTestClicked" />
+        </StackLayout>
     </StackLayout>
 </ContentPage>
