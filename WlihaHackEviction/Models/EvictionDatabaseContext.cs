@@ -21,6 +21,7 @@ namespace WlihaHackEviction.Models
         {
             modelBuilder.Entity<TenantInfo>().ToTable("TenantsInfo");
             modelBuilder.Entity<AddressInfo>().ToTable("AddressInfo");
+            modelBuilder.Entity<EvictionInfo>().ToTable("EvictionInfo");
         }
     }
 }
