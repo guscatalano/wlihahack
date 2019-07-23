@@ -43,7 +43,7 @@ namespace WlihaHackEviction.Controllers
 
         // POST api/Tenant
         [HttpPost]
-        public async void NewTenantAsync(TenantInfo tenantInfo)
+        public async Task NewTenantAsync([FromBody] TenantInfo tenantInfo)
         {
             // ToDo: insert into Actual DB
              _dbContext.DBTenantInfo.Add(tenantInfo);
