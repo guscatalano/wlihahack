@@ -15,5 +15,11 @@ namespace WlihaHackEviction.Models
 
         public DbSet<TenantInfo> DBTenantInfo { get; set; }
         public DbSet<AddressInfo> DBAddressInfo{ get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TenantInfo>().ToTable("TenantsInfo");
+            modelBuilder.Entity<AddressInfo>().ToTable("AddressInfo");
+        }
     }
 }
