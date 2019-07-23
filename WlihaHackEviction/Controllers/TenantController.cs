@@ -56,24 +56,15 @@ namespace WlihaHackEviction.Controllers
             }
 
             if (tenantInfo.Name == null || tenantInfo.Email == null ||
-                addressInfo.StreetAddress == null || addressInfo.City == null || addressInfo.County == null || addressInfo.ZipCode == 0)
+                addressInfo.StreetAddress == null || addressInfo.City == null || addressInfo.County == null || addressInfo.ZipCode == 0
+                || evictionInfo.DateOfEviction == null)
             {
                 // don't insert anything
             }
             try
             {
                 _dbContext.DBTenantInfo.Add(tenantInfo);
-                _dbContext.DBAddressInfo.Add(addressInfo);
                 await _dbContext.SaveChangesAsync();
-                // Get TenantId and AddressId
-                var tenantId = _dbContext.DBTenantInfo
-                    .Where(t => t.Name == tenantInfo.Name && t.Email == tenantInfo.Email)
-                    .Select(t => t.Id);
-
-                var addressId = _dbContext.DBAddressInfo
-                    .Where(a => a.StreetAddress == addressInfo.StreetAddress && a.ZipCode == addressInfo.ZipCode)
-                    .Select(a => a.Id);
-                
             }
             // the only exception we should be getting here is the duplicate insertion - on which we just swallow the exception
             // we take care of the nulls above
@@ -82,13 +73,30 @@ namespace WlihaHackEviction.Controllers
             {
                 // swallow it
             }
+            try
+            {
+                _dbContext.DBAddressInfo.Add(addressInfo);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            { }
+                
+            // Get TenantId and AddressId
+            var tenantId = _dbContext.DBTenantInfo
+                .Where(t => t.Name == tenantInfo.Name && t.Email == tenantInfo.Email)
+                .Select(t => t.Id)
+                .FirstOrDefault();
 
+            var addressId = _dbContext.DBAddressInfo
+                .Where(a => a.StreetAddress == addressInfo.StreetAddress && a.ZipCode == addressInfo.ZipCode)
+                .Select(a => a.Id)
+                .FirstOrDefault();
 
+            evictionInfo.AddressId = addressId;
+            evictionInfo.TenantId = tenantId;
+            _dbContext.DBEvictionInfo.Add(evictionInfo);
+            await _dbContext.SaveChangesAsync();
 
-            
-            //_dbContext.DBEvictionInfo.Add(evictionInfo);
-
-            
         }
 
         // PUT api/Tenant/5
