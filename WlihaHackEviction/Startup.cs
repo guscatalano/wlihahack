@@ -28,8 +28,8 @@ namespace WlihaHackEviction
         public void ConfigureServices(IServiceCollection services)
         {
             // Configure the DBContext
-            services.AddDbContext<EvictionDatabaseContext>(opt =>
-                opt.UseInMemoryDatabase("EvictionDatabase"));
+            services.AddDbContext<EvictionDatabaseContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("SQLConnection")));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
