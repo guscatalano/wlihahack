@@ -19,8 +19,6 @@ namespace WlihaHackEviction.Models
         public string Phone { get; set; }
         [DataMember]
         public int NumberOfPpl { get; set; }
-        //[DataMember]
-        //public int AddressId { get; set; }
     }
 
     [DataContract]
@@ -98,4 +96,14 @@ namespace WlihaHackEviction.Models
         [DataMember]
         public PreparerInfo PreparerInfo { get; set; }
     }
+
+    public class EvictionResult
+    {
+        public AddressInfo AddressInfo { get; set; }
+        public DateTime DateOfEviction { get; set; }
+        public int NumberOfPpl { get; set; }
+    }
+
+    // AddressInfo
+    // NumberOfPpl
 }
