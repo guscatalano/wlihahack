@@ -55,6 +55,9 @@ namespace WlihaHackEviction.Models
         public byte[] EvictionNotice { get; set; }
         [DataMember]
         public byte[] Lease { get; set; }
+
+        [DataMember]
+        public bool Verified { get; set; }
         [DataMember]
         public string Notes { get; set; }
         [DataMember]
