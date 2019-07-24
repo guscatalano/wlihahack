@@ -51,6 +51,7 @@ namespace WlihaHackEviction.Controllers
             TenantInfo tenantInfo = info.TenantInfo;
             AddressInfo addressInfo = info.AddressInfo;
             EvictionInfo evictionInfo = info.EvictionInfo;
+            PreparerInfo preparerInfo = info.PreparerInfo;
 
             // Null-check for all required fields
             if (tenantInfo == null || addressInfo == null || evictionInfo == null)
@@ -108,9 +109,27 @@ namespace WlihaHackEviction.Controllers
 
             evictionInfo.AddressId = addressId;
             evictionInfo.TenantId = tenantId;
+
+            if (preparerInfo != null && preparerInfo.Name != null && preparerInfo.Organization != null)
+            {
+                try
+                {
+                    _dbContext.DBPreparerInfo.Add(preparerInfo);
+                    await _dbContext.SaveChangesAsync();
+
+                    var preparerId = _dbContext.DBPreparerInfo
+                        .Where(p => p.Name == preparerInfo.Name && p.Organization == preparerInfo.Organization)
+                        .Select(p => p.Id)
+                        .FirstOrDefault();
+
+                    evictionInfo.PreparerId = preparerInfo.Id;
+                }
+                catch (Exception)
+                { }
+
+            }
             _dbContext.DBEvictionInfo.Add(evictionInfo);
             await _dbContext.SaveChangesAsync();
-
         }
 
         // PUT api/Tenant/5
