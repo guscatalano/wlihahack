@@ -8,7 +8,6 @@
 
 var map = L.map('map').setView([47, -121], 6);
 
-
 L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   subdomains: ['a', 'b', 'c']
@@ -61,4 +60,4 @@ var addressPoints = [
 
 addressPoints = addressPoints.map(function (p) { return [p[0], p[1]]; });
 
-var heat = L.heatLayer(addressPoints).addTo(map);
+var heat = L.heatLayer(addressPoints, {radius: 50, blur: 15, gradient: {0.0: 'red', 0.5: 'yellow', 1: 'blue'}}).addTo(map);
