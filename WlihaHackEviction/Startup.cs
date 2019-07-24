@@ -26,6 +26,9 @@ namespace WlihaHackEviction
             // Configure the DBContext
             services.AddDbContext<EvictionDatabaseContext>(options =>
                 options.UseSqlServer(connectionStringFromConfig));
+                //options.UseSqlServer(Configuration.GetConnectionString("SQLConnection")));
+
+            services.AddCors();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -52,7 +55,10 @@ namespace WlihaHackEviction
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
-
+            app.UseCors(builder => builder
+                .SetIsOriginAllowed((origin) => { return true; }) // for now, allow any origin
+                .AllowAnyMethod()
+                .AllowAnyHeader());
             app.UseHttpsRedirection();
             app.UseMvc(routes =>
             {
