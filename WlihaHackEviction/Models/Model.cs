@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -104,6 +104,56 @@ namespace WlihaHackEviction.Models
         public int NumberOfPpl { get; set; }
     }
 
-    // AddressInfo
-    // NumberOfPpl
+    [DataContract]
+    public class PermitInfo
+    {
+        [DataMember]
+        public string PermitNum { get; set; }
+        [DataMember]
+        public string PermitClass { get; set; }
+        [DataMember]
+        public string PermitClassMapped { get; set; }
+        [DataMember]
+        public string PermitTypeMapped { get; set; }
+        [DataMember]
+        public string PermitTypeDesc{ get; set; }
+        [DataMember]
+        public string Description { get; set; }
+        [DataMember]
+        public int HousingUnits{ get; set; }
+        [DataMember]
+        public int HousingUnitsRemoved { get; set; }
+        [DataMember]
+        public int HousingUnitsAdded { get; set; }
+        [DataMember]
+        public float EstProjectCost { get; set; }
+        [DataMember]
+        public DateTime AppliedDate { get; set; }
+        [DataMember]
+        public DateTime IssuedDate { get; set; }
+        [DataMember]
+        public DateTime ExpiresDate { get; set; }
+        [DataMember]
+        public DateTime CompletedDate { get; set; }
+        [DataMember]
+        public string StatusCurrent { get; set; }
+        [DataMember]
+        public string OriginalAddress1 { get; set; }
+        [DataMember]
+        public string OriginalCity { get; set; }
+        [DataMember]
+        public string OriginalState { get; set; }
+        [DataMember]
+        public int OriginalZip { get; set; }
+        [DataMember]
+        public string ContractorCompanyName { get; set; }
+        [DataMember]
+        public string Link { get; set; }
+        [DataMember]
+        public float Latitude { get; set; }
+        [DataMember]
+        public float Longitude { get; set; }
+        [DataMember]
+        public string Location1 { get; set; }
+    }
 }

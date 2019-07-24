@@ -1,7 +1,20 @@
-﻿@{
-    ViewData["Title"] = "Index";
+﻿@model List<WlihaHackEviction.Models.TenantInfo>
+
+@{
+    ViewData["Title"] = "Welcome";
 }
 
-<h2>Index</h2>
+<h2>Welcome</h2>
 
-<p>Hello from our View Template!</p>
+<ul>
+    @foreach (var item in @Model)
+    {
+    <li>
+        <p>@item.Id</p>
+        <p>@item.Name</p>
+        <p>@item.Email</p>
+        <p>@item.Phone</p>
+        <p>@item.NumberOfPpl</p>
+    </li>
+    }
+</ul>
