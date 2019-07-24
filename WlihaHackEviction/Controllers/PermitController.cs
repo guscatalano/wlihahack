@@ -10,13 +10,13 @@ using WlihaHackEviction.Models;
 
 namespace WlihaHackPermit.Controllers
 {
-    [Route("api/permit")]
+    [Route("api/[controller]")]
     public class PermitController : Controller
     {
         private SqlConnection connection;
         public PermitController()
         {
-            this.connection = new SqlConnection(new SqlConnectionStringBuilder()
+            connection = new SqlConnection(new SqlConnectionStringBuilder()
             {
                 DataSource = "ijfods31344.database.windows.net",
                 InitialCatalog = "wliha",
@@ -97,15 +97,14 @@ namespace WlihaHackPermit.Controllers
         }
 
         // GET api/Permit/address
-        [HttpGet("{address}")]
-        [Route("api/permit/{address}/")]
-        public List<PermitInfo> GetPermitInfoForAddress(string address)
+        [HttpGet()]
+        public List<PermitInfo> GetPermitInfoForAddressesWithEvictions()
         {
             string query = @"
             SELECT *
             FROM [dbo].[PermitInfo]
             LEFT JOIN [dbo].[AddressInfo]
-            ON ((LOWER([dbo].[PermitInfo].[OriginalAddress1]) = LOWER([dbo].[AddressInfo].[StreetAddress])
+            ON ((@address (LOWER([dbo].[PermitInfo].[OriginalAddress1]) = LOWER([dbo].[AddressInfo].[StreetAddress])
                  and ([dbo].[AddressInfo].[ZipCode] = [dbo].[PermitInfo].[OriginalZip])))
             WHERE
             EXISTS
@@ -128,11 +127,10 @@ namespace WlihaHackPermit.Controllers
         }
 
         // GET api/PermitLinks/address
-        [HttpGet("{address}")]
-        [Route("api/permitlinks/{address}/")]
-        public List<string> GetPermitLinksForAddress(string address)
+        [HttpGet()]
+        public List<string> GetPermitLinksForAddressesWithEvictions()
         {
-            List<PermitInfo> permits = GetPermitInfoForAddress(address);
+            List<PermitInfo> permits = GetPermitInfoForAddressesWithEvictions();
             
             //TODO: sort permits first
 
