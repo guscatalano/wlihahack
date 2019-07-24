@@ -26,9 +26,10 @@ namespace WlihaHackEviction.Controllers
 
         // GET: api/Tenant
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var tenants = await _dbContext.DBTenantInfo.ToListAsync();
+            return View(tenants);
         }
 
         // GET api/Tenant/5
