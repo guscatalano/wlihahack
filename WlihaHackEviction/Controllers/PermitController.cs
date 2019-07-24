@@ -13,8 +13,17 @@ namespace WlihaHackPermit.Controllers
     [Route("api/permit")]
     public class PermitController : Controller
     {
+        private SqlConnection connection;
         public PermitController()
         {
+            this.connection = new SqlConnection(new SqlConnectionStringBuilder()
+            {
+                DataSource = "ijfods31344.database.windows.net",
+                InitialCatalog = "wliha",
+                UserID = "wliha",
+                Password = "Quattro!",
+                MultipleActiveResultSets = true
+            }.ConnectionString);
         }
 
         // GET: api/Permit
@@ -35,8 +44,7 @@ namespace WlihaHackPermit.Controllers
 			        LEFT JOIN [dbo].[PermitInfo]
 			        ON ((LOWER([dbo].[AddressInfo].[StreetAddress]) like LOWER([dbo].[PermitInfo].[OriginalAddress1]))) 
 				        and ([dbo].[AddressInfo].[ZipCode] = [dbo].[PermitInfo].[OriginalZip])))";
-
-            SqlConnection connection = new SqlConnection("connectionString");
+            
             SqlCommand cmd = new SqlCommand(query, connection);
             SqlDataReader reader = cmd.ExecuteReader();
             List<TenantInfo> tenantInfo = new List<TenantInfo>();
@@ -71,7 +79,6 @@ namespace WlihaHackPermit.Controllers
 			        ON ((LOWER([dbo].[AddressInfo].[StreetAddress]) like LOWER([dbo].[PermitInfo].[OriginalAddress1]))) 
 				        and ([dbo].[AddressInfo].[ZipCode] = [dbo].[PermitInfo].[OriginalZip])))";
 
-            SqlConnection connection = new SqlConnection("connectionString");
             SqlCommand cmd = new SqlCommand(query, connection);
             SqlDataReader reader = cmd.ExecuteReader();
             List<TenantInfo> tenantInfo = new List<TenantInfo>();
@@ -107,7 +114,6 @@ namespace WlihaHackPermit.Controllers
                     LEFT JOIN [dbo].[EvictionInfo]
                     ON (LOWER([dbo].[EvictionInfo].[AddressId]) = LOWER([dbo].[AddressInfo].[Id])))";
 
-            SqlConnection connection = new SqlConnection("connectionString");
             SqlCommand cmd = new SqlCommand(query, connection);
             SqlDataReader reader = cmd.ExecuteReader();
             List<PermitInfo> permitInfo = new List<PermitInfo>();
