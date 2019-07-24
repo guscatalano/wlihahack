@@ -24,10 +24,29 @@ var myIcon = L.icon({
   popupAnchor: [0, -14]
 })
 
+var info = L.control();
+
+info.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this._div.style.width= "200px";
+    this._div.style.height= "200px";
+    this.update({name: "s1", address: "a1"});
+    return this._div;
+};
+
+// method that we will use to update the control based on feature properties passed
+info.update = function (props) {
+    this._div.innerHTML = '<p>' + 'Name: ' + props.name + 'Address: ' + props.address + '</p>';
+};
+
+info.addTo(map);
+
 for ( var i=0; i < markers.length; ++i )
 {
- L.marker( [markers[i].lat, markers[i].lng], {icon: myIcon} )
-  .bindPopup( '<a href="' + markers[i].url + '" target="_blank">' + markers[i].name + '</a>' )
+  console.log(markers[i].name)
+  console.log(markers[i].url)
+ L.marker( [markers[i].lat, markers[i].lng], {icon: myIcon, title: markers[i].name, alt: markers[i].url } )
+  .on('click', function(e) { info.update({name: e.target.options.title, address: e.target.options.alt}) })
   .addTo( map );
 }
 
