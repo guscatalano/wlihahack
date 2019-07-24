@@ -141,5 +141,32 @@ namespace WlihaHackPermit.Controllers
             }
             return links;
         }
+
+        // GET api/Permit/address
+        [HttpGet("{address}")]
+        public List<PermitInfo> GetPermitInfoForAddress(string address)
+        {
+            SqlParameter parameter = new SqlParameter();
+            parameter.Value = address;
+            parameter.ParameterName = "address";
+            parameter.Direction = System.Data.ParameterDirection.Input;
+
+            string query = @"
+            SELECT *
+            FROM [dbo].[PermitInfo]
+            WHERE LOWER(@address) = LOWER([dbo].[PermitInfo].[OriginalAddress])";
+
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.Add(parameter);
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<PermitInfo> permitInfo = new List<PermitInfo>();
+
+            while (reader.Read())
+            {
+                PermitInfo p = new PermitInfo();
+                permitInfo.Add(p);
+            }
+            return permitInfo;
+        }
     }
 }
