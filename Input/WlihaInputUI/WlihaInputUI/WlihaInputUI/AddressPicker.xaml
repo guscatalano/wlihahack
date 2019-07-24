@@ -8,9 +8,8 @@
              x:Class="WlihaInputUI.AddressPicker"
              >
   <ContentPage.Content>
-        <StackLayout VerticalOptions="FillAndExpand">
+        <StackLayout x:Name="layout" VerticalOptions="FillAndExpand">
             <Label x:Name="prompt" Text="Pick address on map" />
-            <local:ExtendedMap x:Name="map" MapType="Street" IsShowingUser="True"/>
             <Picker x:Name="alternativePicker" Title="Pick address" IsVisible="True" />
             <Button x:Name="accept" Text="Accept" IsEnabled="False" Clicked="Accept_Clicked"/>
       </StackLayout>
