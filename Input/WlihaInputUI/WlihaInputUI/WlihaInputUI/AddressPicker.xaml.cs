@@ -95,7 +95,7 @@ namespace WlihaInputUI
             UpdatePosition(e.Position, map.VisibleRegion.Radius);
         }
 
-        private void UpdatePosition(Position position, Distance radius)
+        private void UpdatePosition(Xamarin.Forms.Maps.Position position, Distance radius)
         {
             activePin.Position = position;
             activePin.Label = "Fetching address ...";
@@ -107,19 +107,21 @@ namespace WlihaInputUI
             }
             map.MoveToRegion(MapSpan.FromCenterAndRadius(position,radius));
 
-            geocoder.GetAddressesForPositionAsync(position).ContinueWith(
+            var geoPos = new Plugin.Geolocator.Abstractions.Position(position.Latitude, position.Longitude);
+
+            CrossGeolocator.Current.GetAddressesForPositionAsync(geoPos).ContinueWith(
                 (result) => Device.BeginInvokeOnMainThread(
                         () => ResolveComplete(result.Result)
                     )
                 );
         }
 
-        private void ResolveComplete(IEnumerable<String> addresses)
+        private void ResolveComplete(IEnumerable<Plugin.Geolocator.Abstractions.Address> addresses)
         {
             alternativePicker.Items.Clear();
             foreach (var addr in addresses)
             {
-                alternativePicker.Items.Add(addr);
+                alternativePicker.Items.Add(FormatAddress(addr));
             }
 
             if (addresses.Count() == 0)
@@ -129,7 +131,7 @@ namespace WlihaInputUI
             }
             else
             {
-                activePin.Label = addresses.First();
+                activePin.Label = alternativePicker.Items.First();
                 accept.IsEnabled = true;
             }
             alternativePicker.SelectedIndex = 0;
@@ -138,6 +140,41 @@ namespace WlihaInputUI
         private void Accept_Clicked(object sender, EventArgs e)
         {
             pickResult.SetResult((string)alternativePicker.SelectedItem);
+        }
+
+        private String FormatAddress(Plugin.Geolocator.Abstractions.Address address)
+        {
+            // option one: street number, street and city
+            if ((address.SubThoroughfare != null) && (address.Thoroughfare != null) && (address.Locality != null))
+            {
+                return address.SubThoroughfare + " " + address.Thoroughfare + ", " + address.Locality;
+            }
+            // option two: street and city only
+            else if ((address.Thoroughfare != null) && (address.Locality != null))
+            {
+                return address.Thoroughfare + ", " + address.Locality;
+            }
+            // option three: city + zip
+            else if ((address.Locality != null) && (address.PostalCode!=null))
+            {
+                return address.Locality + " " + address.PostalCode;
+            }
+            // option four: city + state
+            else if ((address.Locality != null) && (address.AdminArea != null))
+            {
+                return address.Locality + ", " + address.AdminArea;
+            }
+            // option five: city + country code
+            else if ((address.Locality != null) && (address.CountryCode != null))
+            {
+                return address.Locality + ", " + address.CountryCode;
+            }
+            // option six: concatenate fields
+            else
+            {
+                string[] fields = { address.SubThoroughfare, address.Thoroughfare, address.SubLocality, address.Locality, address.PostalCode, address.CountryCode, address.CountryName };
+                return String.Join(", ", fields);
+            }
         }
     }
 }
