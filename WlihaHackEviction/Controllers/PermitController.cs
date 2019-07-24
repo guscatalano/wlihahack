@@ -21,17 +21,19 @@ namespace WlihaHackPermit.Controllers
         [HttpGet]
         public List<TenantInfo> GetTenantsEvictedWithoutPermit()
         {
-            string query = @"SELECT *
+            string query = @"
+            SELECT *
             FROM [dbo].[TenantsInfo]
             WHERE [dbo].[TenantsInfo].[Id] =
-            (SELECT [dbo].[EvictionInfo].[TenantId]
-            FROM [dbo].[EvictionInfo]
-            WHERE 
-	        NOT EXISTS(
-	        SELECT* 
-	        FROM [dbo].[AddressInfo]
-	        LEFT JOIN [dbo].[PermitInfo]
-	        ON [dbo].[AddressInfo].[StreetAddress] like [dbo].[PermitInfo].[OriginalAddress1]))";
+	            (SELECT [dbo].[EvictionInfo].[TenantId]
+	            FROM [dbo].[EvictionInfo]
+	            WHERE 
+		        NOT EXISTS(
+			        SELECT* 
+			        FROM [dbo].[AddressInfo]
+			        LEFT JOIN [dbo].[PermitInfo]
+			        ON ((LOWER([dbo].[AddressInfo].[StreetAddress]) like LOWER([dbo].[PermitInfo].[OriginalAddress1]))) 
+				        and ([dbo].[AddressInfo].[ZipCode] = [dbo].[PermitInfo].[OriginalZip])))";
 
             SqlConnection connection = new SqlConnection("connectionString");
             SqlCommand cmd = new SqlCommand(query, connection);
@@ -52,24 +54,83 @@ namespace WlihaHackPermit.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<string> GetTenantsEvictedWithExpiredPermit()
+        public List<TenantInfo> GetTenantsEvictedWithPermit()
         {
-            throw new NotImplementedException();
+            string query = @"
+            SELECT *
+            FROM [dbo].[TenantsInfo]
+            WHERE [dbo].[TenantsInfo].[Id] =
+	            (SELECT [dbo].[EvictionInfo].[TenantId]
+	            FROM [dbo].[EvictionInfo]
+	            WHERE 
+			        SELECT* 
+			        FROM [dbo].[AddressInfo]
+			        LEFT JOIN [dbo].[PermitInfo]
+			        ON ((LOWER([dbo].[AddressInfo].[StreetAddress]) like LOWER([dbo].[PermitInfo].[OriginalAddress1]))) 
+				        and ([dbo].[AddressInfo].[ZipCode] = [dbo].[PermitInfo].[OriginalZip])))";
+
+            SqlConnection connection = new SqlConnection("connectionString");
+            SqlCommand cmd = new SqlCommand(query, connection);
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<TenantInfo> tenantInfo = new List<TenantInfo>();
+
+            while (reader.Read())
+            {
+                TenantInfo t = new TenantInfo();
+                t.Name = reader["Name"].ToString();
+                t.Email = reader["Email"].ToString();
+                t.Id = (int)reader["Id"];
+                t.NumberOfPpl = (int)reader["NumberOfPpl"];
+                t.Phone = reader["Phone"].ToString();
+                tenantInfo.Add(t);
+            }
+            return tenantInfo;
         }
 
-        // GET api/Permit/Id
-        [HttpGet("{ id}")]
-        public string Get(int tenantId)
+        // GET api/Permit/address
+        [HttpGet("{address}")]
+        public List<PermitInfo> GetPermitInfoForAddress(string address)
         {
-            // Get PermitInfo
-            return "not implemented yet";
+            string query = @"
+            SELECT *
+            FROM [dbo].[PermitInfo]
+            LEFT JOIN [dbo].[AddressInfo]
+            ON LOWER([dbo].[PermitInfo].[OriginalAddress1]) = LOWER([dbo].[AddressInfo].[StreetAddress])
+            WHERE
+            EXISTS
+                (SELECT[dbo].[AddressInfo].[StreetAddress]
+                FROM [dbo].[AddressInfo]
+                    LEFT JOIN [dbo].[EvictionInfo]
+                    ON (LOWER([dbo].[EvictionInfo].[AddressId]) = LOWER([dbo].[AddressInfo].[Id])))";
+
+            SqlConnection connection = new SqlConnection("connectionString");
+            SqlCommand cmd = new SqlCommand(query, connection);
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<PermitInfo> permitInfo = new List<PermitInfo>();
+
+            while (reader.Read())
+            {
+                PermitInfo p = new PermitInfo();
+                
+                permitInfo.Add(p);
+            }
+            return permitInfo;
         }
 
-        // GET api/Permit/Refresh
-        [HttpGet]
-        public void Get([FromBody]string value)
+        // GET api/PermitLink/address
+        [HttpGet("{address}")]
+        public List<string> GetPermitLinkForAddress(string address)
         {
-            // refreshes the permit info table by downloading the csv and importing it to the table
+            List<PermitInfo> permits = GetPermitInfoForAddress(address);
+            
+            //TODO: sort permits first
+
+            List<string> links = new List<string>();
+
+            foreach(PermitInfo p in permits){
+                links.Add(p.Link);
+            }
+            return links;
         }
     }
 }
