@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace WlihaHackEviction.Models
 {
     public class EvictionDatabaseContext : DbContext
     {
-        public EvictionDatabaseContext(DbContextOptions<EvictionDatabaseContext> options)
+        public EvictionDatabaseContext(
+            DbContextOptions<EvictionDatabaseContext> options)
             : base(options)
         {
         }
@@ -16,6 +19,7 @@ namespace WlihaHackEviction.Models
         public DbSet<TenantInfo> DBTenantInfo { get; set; }
         public DbSet<AddressInfo> DBAddressInfo{ get; set; }
         public DbSet<EvictionInfo> DBEvictionInfo { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
