@@ -70,6 +70,22 @@ namespace WlihaHackEviction.Models
     }
 
     [DataContract]
+    public class PreparerInfo
+    {
+        [DataMember]
+        public int Id { get; set; }
+        [DataMember]
+        public string Name { get; set; }
+        [DataMember]
+        public string Email { get; set; }
+
+        [DataMember]
+        public string Phone { get; set; }
+        [DataMember]
+        public string Organization { get; set; }
+    }
+
+    [DataContract]
     public class CompleteTenantEvictionInfo
     {
         [DataMember]
@@ -78,5 +94,8 @@ namespace WlihaHackEviction.Models
         public AddressInfo AddressInfo { get; set; }
         [DataMember]
         public EvictionInfo EvictionInfo { get; set; }
+
+        [DataMember]
+        public PreparerInfo PreparerInfo { get; set; }
     }
 }
