@@ -51,6 +51,19 @@ namespace WlihaHackEviction.Models
         public int Id { get; set; }
         [DataMember]
         public DateTime DateOfEviction { get; set; }
+        [DataMember]
+        public byte[] EvictionNotice { get; set; }
+        [DataMember]
+        public byte[] Lease { get; set; }
+        [DataMember]
+        public string Notes { get; set; }
+        [DataMember]
+        public int TenantId { get; set; }
+
+        [DataMember]
+        public int AddressId { get; set; }
+        [DataMember]
+        public int PreparerId { get; set; }
     }
 
     [DataContract]
