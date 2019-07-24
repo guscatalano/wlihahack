@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WlihaHackEviction.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -30,10 +31,10 @@ namespace WlihaHackEviction.Controllers
 
         // GET api/Address/AddressId
         [HttpGet("{id}")]
-        public async Task<ActionResult<AddressInfo>> Get(long id)
+        public async Task<ActionResult<AddressInfo>> GetAddressAsync(int addressId)
         {
             // ToDo: replace with DB query
-            var dbAddressInfo = await _dbContext.DBAddressInfo.FindAsync(id);
+            var dbAddressInfo = await _dbContext.DBAddressInfo.FirstOrDefaultAsync(m => m.Id == addressId);
             if (dbAddressInfo == null)
             {
                 return NotFound();
@@ -43,11 +44,18 @@ namespace WlihaHackEviction.Controllers
 
         // POST api/Address
         [HttpPost]
-        public async void Post(AddressInfo addressInfo)
+        public async Task NewAddressAsync([FromBody] AddressInfo addressInfo)
         {
-            // ToDo: insert into Actual DB
-            _dbContext.Add(addressInfo);
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                _dbContext.DBAddressInfo.Add(addressInfo);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.Message;
+            }
+
         }
 
         // PUT api/Address/AddressId

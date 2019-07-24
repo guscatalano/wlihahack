@@ -85,6 +85,11 @@ namespace WlihaInputUI
         private async void CameraButtonLease_ClickedAsync(object sender, EventArgs e)
         {
             Take_Photo(LeasePhoto);
+	}
+        async void OnMapTestClicked(object sender, EventArgs e)
+        {
+            String result = await AddressPicker.ModalPickAddressFromGPS(Navigation);
+            await DisplayAlert("Picked Address", result, "OK");
         }
 
         private async void Take_Photo(Xamarin.Forms.Image imageHolder)
