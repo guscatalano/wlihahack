@@ -39,9 +39,9 @@ namespace WlihaHackEviction.Models
         [DataMember]
         public int ZipCode { get; set; }
         [DataMember]
-        public float Latitude { get; set; }
+        public double Latitude { get; set; }
         [DataMember]
-        public float Longitude { get; set; }
+        public double Longitude { get; set; }
     }
 
     [DataContract]
@@ -55,6 +55,9 @@ namespace WlihaHackEviction.Models
         public byte[] EvictionNotice { get; set; }
         [DataMember]
         public byte[] Lease { get; set; }
+
+        [DataMember]
+        public bool Verified { get; set; }
         [DataMember]
         public string Notes { get; set; }
         [DataMember]

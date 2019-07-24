@@ -21,9 +21,21 @@ namespace WlihaHackEviction.Controllers
 
         // GET: api/Eviction
         [HttpGet]
-        public IEnumerable<string> Get()
+        public List<CompleteTenantEvictionInfo> GetAllEvictions()
         {
-            return new string[] { "value1", "value2" };
+            List<CompleteTenantEvictionInfo> result = null;
+            result = _dbContext.DBEvictionInfo.Join(_dbContext.DBTenantInfo,
+                evictionInfo => evictionInfo.TenantId,
+                tenantInfo => tenantInfo.Id,
+                (evictionInfo, tenantInfo) => new { tenantInfo, evictionInfo }
+                )
+                .Join(_dbContext.DBAddressInfo,
+                combinedInfo => combinedInfo.evictionInfo.AddressId,
+                addressInfo => addressInfo.Id,
+                (combinedInfo, addressInfo) =>
+                new CompleteTenantEvictionInfo { EvictionInfo = combinedInfo.evictionInfo, AddressInfo = addressInfo, TenantInfo = combinedInfo.tenantInfo }
+                ).ToList();
+            return result;
         }
 
         // GET api/Eviction/Id
@@ -42,9 +54,14 @@ namespace WlihaHackEviction.Controllers
         }
 
         // PUT api/Eviction/Id
+        // this can be used to verify the eviction and add some notes
+        // the eviction info object needs to be passed as json
+        // make sure that non-null fields of EvictionInfo are populated in the object sent to this call
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task UpdateEviction([FromBody] EvictionInfo info)
         {
+            _dbContext.DBEvictionInfo.Update(info);
+            await _dbContext.SaveChangesAsync();
         }
 
         // DELETE api/Eviction/Id
