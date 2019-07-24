@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Serenity.Data;
 using WlihaHackEviction.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -20,9 +17,31 @@ namespace WlihaHackPermit.Controllers
             _dbContext = context;
         }
 
-        // GET: api/Permit
+        // GET api/Permit/Address
+        [HttpGet("{address}")]
+        public List<PermitInfo> GetPermitInfoForAddress(string address)
+        {
+            SqlParameter parameter = new SqlParameter();
+            parameter.Value = address;
+            parameter.ParameterName = "address";
+            parameter.Direction = System.Data.ParameterDirection.Input;
+
+            string query = @"
+            SELECT *
+            FROM [dbo].[PermitInfo]
+            WHERE LOWER(@address) = LOWER([dbo].[PermitInfo].[OriginalAddress])";
+
+            List<PermitInfo> permitInfo = _dbContext.DBPermitInfo.FromSql(query, parameter).ToListAsync().Result;
+            if (permitInfo == null)
+            {
+                return new List<PermitInfo>();
+            }
+            return permitInfo;
+        }
+
+
+        // GET api/Permit/Tenants/EvictedWithoutPermit
         [HttpGet]
-        [Route("api/permit/tenantsevictedwithoutpermit/")]
         public List<TenantInfo> GetTenantsEvictedWithoutPermit()
         {
             string query = @"
@@ -47,8 +66,8 @@ namespace WlihaHackPermit.Controllers
             return tenantInfo;
         }
 
+        // GET api/Permit/Tenants/EvictedWithPermit
         [HttpGet]
-        [Route("api/permit/tenantsevictedwithpermit/")]
         public List<TenantInfo> GetTenantsEvictedWithPermit()
         {
             string query = @"
@@ -69,10 +88,9 @@ namespace WlihaHackPermit.Controllers
                 return new List<TenantInfo>();
             }
             return tenantInfo;
-
         }
 
-        // GET api/Permit/address
+        // GET api/Permit/Evictions
         [HttpGet()]
         public List<PermitInfo> GetPermitInfoForAddressesWithEvictions()
         {
@@ -97,42 +115,14 @@ namespace WlihaHackPermit.Controllers
             return permitInfo;
         }
 
-        // GET api/PermitLinks/address
+        // GET api/PermitLinks/Evictions
         [HttpGet()]
         public List<string> GetPermitLinksForAddressesWithEvictions()
         {
             List<PermitInfo> permits = GetPermitInfoForAddressesWithEvictions();
-            
-            //TODO: sort permits first
-
             List<string> links = new List<string>();
-
-            foreach(PermitInfo p in permits){
-                links.Add(p.Link);
-            }
+            permits.ForEach(permit => links.Add(permit.Link.ToString()));
             return links;
-        }
-
-        // GET api/Permit/address
-        [HttpGet("{address}")]
-        public List<PermitInfo> GetPermitInfoForAddress(string address)
-        {
-            SqlParameter parameter = new SqlParameter();
-            parameter.Value = address;
-            parameter.ParameterName = "address";
-            parameter.Direction = System.Data.ParameterDirection.Input;
-
-            string query = @"
-            SELECT *
-            FROM [dbo].[PermitInfo]
-            WHERE LOWER(@address) = LOWER([dbo].[PermitInfo].[OriginalAddress])";
-
-            List<PermitInfo> permitInfo = _dbContext.DBPermitInfo.FromSql(query, parameter).ToListAsync().Result;
-            if (permitInfo == null)
-            {
-                return new List<PermitInfo>();
-            }
-            return permitInfo;
         }
     }
 }
