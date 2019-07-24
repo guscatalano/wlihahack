@@ -1,4 +1,7 @@
 FormsViewGroup
+Plugin.CurrentActivity
+Plugin.Media
+Plugin.Permissions
 System.Runtime
 WlihaInputUI
 Xamarin.Android.Arch.Core.Common
@@ -46,3 +49,6 @@ Xamarin.Forms.Platform.Android
 Xamarin.Forms.Platform
 Xamarin.Forms.Xaml
 netstandard
+IO.Swagger
+Newtonsoft.Json
+RestSharp

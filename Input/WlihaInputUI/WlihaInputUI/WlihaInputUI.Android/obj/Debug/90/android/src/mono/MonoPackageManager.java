@@ -112,6 +112,9 @@ class MonoPackageManager_Resources {
 		/* We need to ensure that "WlihaInputUI.Android.dll" comes first in this list. */
 		"WlihaInputUI.Android.dll",
 		"FormsViewGroup.dll",
+		"Plugin.CurrentActivity.dll",
+		"Plugin.Media.dll",
+		"Plugin.Permissions.dll",
 		"WlihaInputUI.dll",
 		"Xamarin.Android.Arch.Core.Common.dll",
 		"Xamarin.Android.Arch.Core.Runtime.dll",
@@ -157,6 +160,9 @@ class MonoPackageManager_Resources {
 		"Xamarin.Forms.Platform.Android.dll",
 		"Xamarin.Forms.Platform.dll",
 		"Xamarin.Forms.Xaml.dll",
+		"IO.Swagger.dll",
+		"Newtonsoft.Json.dll",
+		"RestSharp.dll",
 	};
 	public static final String[] Dependencies = new String[]{
 	};
