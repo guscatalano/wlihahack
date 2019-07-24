@@ -1,28 +1,145 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="WlihaInputUI.MainPage">
-    <StackLayout Margin="10,35,10,10">
-        <Label Text="Notes"
-               HorizontalOptions="Center"
-               FontAttributes="Bold" />
-        <Editor x:Name="editor"
-                Placeholder="Enter your note"
-                HeightRequest="100" />
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Button Text="Save"
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="WlihaInputUI.MainPage"
+            Title="WLIHA Eviction Submission">
+    <TabbedPage.Children>
+        <ContentPage Title="Tenant">
+            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Margin="10,35,10,10">
+                <StackLayout VerticalOptions="Start">
+                    <Label Text="Tenant Information"
+                    HorizontalOptions="Center"
+                    FontSize = "20" 
+                    FontAttributes="Bold" />
+                    <Entry x:Name="tenantName"
+                    Placeholder="Tenant Name" />
+                    <Entry x:Name="tenantEmail"
+                    Placeholder="Email Address" />
+                    <Entry x:Name="tenantPhone"
+                    Placeholder="Phone number" />
+                    <Entry x:Name="tenantCount"
+                    Placeholder="Number of Tenants" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.15*" />
+                            <ColumnDefinition Width="0.85*" />
+                        </Grid.ColumnDefinitions>
+                        <Switch x:Name="orgswitch" Grid.Column="0" HorizontalOptions="CenterAndExpand" Toggled="Orgswitch_Toggled"/>
+                        <Label Grid.Column="1"
+                    Text="Are you submitting on behalf of a client?"
+                    HorizontalOptions="Start"
+                    FontSize = "20" />
+                    </Grid>
+                </StackLayout>
+                <StackLayout VerticalOptions="CenterAndExpand">
+                </StackLayout>
+                <StackLayout VerticalOptions="End">
+                    <Button Text="Next" x:Name="NextPageTenant" HorizontalOptions="End" Clicked="NextPageTenant_Clicked" />
+                </StackLayout>
+            </StackLayout>
+        </ContentPage>
+        <ContentPage x:Name="orgpage"  Title="Organization">
+            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Margin="10,35,10,10">
+                <StackLayout VerticalOptions="Start">
+                    <Label Text="Organization Information"
+                    HorizontalOptions="Center"
+                    FontSize = "20" 
+                    FontAttributes="Bold" />
+                    <Entry x:Name="orgname"
+                    Placeholder="Org Name"
+                    IsEnabled="false"/>
+                    <Entry x:Name="orgemail"
+                    Placeholder="Org Email"
+                    IsEnabled="false"/>
+                    <Entry x:Name="orgphone"
+                    Placeholder="Org Phone"
+                    IsEnabled="false"/>
+                </StackLayout>
+                <StackLayout VerticalOptions="CenterAndExpand">
+                </StackLayout>
+                <StackLayout VerticalOptions="End">
+                    <Button Text="Next" x:Name="NextPageOrg" HorizontalOptions="End" Clicked="NextPageOrg_Clicked" />
+                </StackLayout>
+            </StackLayout>
+        </ContentPage>
+        <ContentPage x:Name="addrpage" Title="Address">
+            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Margin="10,35,10,10">
+                <StackLayout VerticalOptions="Start">
+                    <Label Text="Address Information"
+                HorizontalOptions="Center"
+                FontSize = "20" 
+                FontAttributes="Bold" />
+                    <Label Text="Address"
+                HorizontalOptions="Start"
+                FontSize = "20" 
+                FontAttributes="Bold" />
+                    <Entry x:Name="addrStreet"
+                Placeholder="Number and Street" />
+                    <Entry x:Name="addrUnit"
+                Placeholder="Unit" />
+                    <Entry x:Name="addrCity"
+                Placeholder="City" />
+                    <Entry x:Name="addrCounty"
+                Placeholder="County" />
+                    <Entry x:Name="addrZip"
+                Placeholder="Zip" />
+                    <!--<Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Text="Save"
                     Clicked="OnSaveButtonClicked" />
-            <Button Grid.Column="1"
+                    <Button Grid.Column="1"
                     Text="Delete"
                     Clicked="OnDeleteButtonClicked"/>
-        </Grid>
-        <StackLayout x:Name="DebugControls" IsVisible="False">
-            <Label Text="Debug controls, only visible in debug builds" HorizontalOptions="Center" />
-            <Button Text="Map Test" Clicked="OnMapTestClicked" />
-        </StackLayout>
-    </StackLayout>
-</ContentPage>
+                </Grid>-->
+                </StackLayout>
+                <StackLayout VerticalOptions="CenterAndExpand">
+                </StackLayout>
+                <StackLayout VerticalOptions="End">
+                    <Button Text="Next" x:Name="NextPageAddress" HorizontalOptions="End" Clicked="NextPageAddress_Clicked"/>
+                </StackLayout>
+            </StackLayout>
+        </ContentPage>
+        <ContentPage x:Name="noticepage" Title="Eviction Notice">
+            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Margin="10,35,10,10">
+                <StackLayout VerticalOptions="Start">
+                    <Label Text="Send a photo of your eviction notice"
+                    HorizontalOptions="Center"
+                    FontSize = "20" 
+                    FontAttributes="Bold" />
+                    <Entry x:Name="evictionDate"
+                        Placeholder="Date of Eviction" />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Image x:Name="EvictionPhoto" />
+                        <Button x:Name="CameraButtonEviction" Text="Take Photo" Grid.Row="1" />
+                    </Grid>
+                    <Label Text="Send a photo of your lease agreement"
+                    HorizontalOptions="Center"
+                    FontSize = "20" 
+                    FontAttributes="Bold" />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Image x:Name="LeasePhoto" />
+                        <Button x:Name="CameraButtonLease" Text="Take Photo" Grid.Row="1" />
+                    </Grid>
+                </StackLayout>
+                <StackLayout VerticalOptions="CenterAndExpand">
+                </StackLayout>
+                <StackLayout VerticalOptions="End">
+                    <Button Text="Submit" x:Name="Submit" HorizontalOptions="End" Clicked="Submit_Clicked"/>
+                </StackLayout>
+            </StackLayout>
+        </ContentPage>
+    </TabbedPage.Children>
+</TabbedPage>
