@@ -38,7 +38,7 @@ namespace WlihaInputUI
 
         async void OnMapTestClicked(object sender, EventArgs e)
         {
-            String result = await AddressPicker.ModalPickAddressFromGPS(Navigation);
+            String result = await AddressPicker.ModalPickAddress(Navigation, editor.Text);
             await DisplayAlert("Picked Address", result, "OK");
         }
     }
