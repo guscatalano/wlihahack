@@ -29,11 +29,16 @@ namespace WlihaHackEviction.Controllers
                 tenantInfo => tenantInfo.Id,
                 (evictionInfo, tenantInfo) => new { tenantInfo, evictionInfo }
                 )
+                .Join(_dbContext.DBPreparerInfo,
+                evictionAndTenantInfo => evictionAndTenantInfo.evictionInfo.PreparerId,
+                preparerInfo => preparerInfo.Id,
+                (evictionAndTenantInfo, preparerInfo) => new { evictionAndTenantInfo, preparerInfo }
+                )
                 .Join(_dbContext.DBAddressInfo,
-                combinedInfo => combinedInfo.evictionInfo.AddressId,
+                combinedInfo => combinedInfo.evictionAndTenantInfo.evictionInfo.AddressId,
                 addressInfo => addressInfo.Id,
                 (combinedInfo, addressInfo) =>
-                new CompleteTenantEvictionInfo { EvictionInfo = combinedInfo.evictionInfo, AddressInfo = addressInfo, TenantInfo = combinedInfo.tenantInfo }
+                new CompleteTenantEvictionInfo { EvictionInfo = combinedInfo.evictionAndTenantInfo.evictionInfo, AddressInfo = addressInfo, TenantInfo = combinedInfo.evictionAndTenantInfo.tenantInfo, PreparerInfo = combinedInfo.preparerInfo }
                 ).ToList();
             return result;
         }
