@@ -10,7 +10,7 @@ using WlihaHackEviction.Models;
 
 namespace WlihaHackPermit.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/permit")]
     public class PermitController : Controller
     {
         public PermitController()
@@ -19,6 +19,7 @@ namespace WlihaHackPermit.Controllers
 
         // GET: api/Permit
         [HttpGet]
+        [Route("api/permit/tenantsevictedwithoutpermit/")]
         public List<TenantInfo> GetTenantsEvictedWithoutPermit()
         {
             string query = @"
@@ -54,6 +55,7 @@ namespace WlihaHackPermit.Controllers
         }
 
         [HttpGet]
+        [Route("api/permit/tenantsevictedwithpermit/")]
         public List<TenantInfo> GetTenantsEvictedWithPermit()
         {
             string query = @"
@@ -89,6 +91,7 @@ namespace WlihaHackPermit.Controllers
 
         // GET api/Permit/address
         [HttpGet("{address}")]
+        [Route("api/permit/{address}/")]
         public List<PermitInfo> GetPermitInfoForAddress(string address)
         {
             string query = @"
@@ -118,9 +121,10 @@ namespace WlihaHackPermit.Controllers
             return permitInfo;
         }
 
-        // GET api/PermitLink/address
+        // GET api/PermitLinks/address
         [HttpGet("{address}")]
-        public List<string> GetPermitLinkForAddress(string address)
+        [Route("api/permitlinks/{address}/")]
+        public List<string> GetPermitLinksForAddress(string address)
         {
             List<PermitInfo> permits = GetPermitInfoForAddress(address);
             
