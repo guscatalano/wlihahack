@@ -22,10 +22,9 @@ namespace WlihaHackEviction.Controllers
 
         // GET: api/Tenant
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Index()
         {
-            // ToDo: Return all Tenants
-            return new string[] { "tenant1", "tenant2" };
+            return View();
         }
 
         // GET api/Tenant/5
