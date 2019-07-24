@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Serenity.Data;
 using WlihaHackEviction.Models;
 
@@ -13,17 +14,10 @@ namespace WlihaHackPermit.Controllers
     [Route("api/[controller]")]
     public class PermitController : Controller
     {
-        private SqlConnection connection;
-        public PermitController()
+        private EvictionDatabaseContext _dbContext;
+        public PermitController(EvictionDatabaseContext context)
         {
-            connection = new SqlConnection(new SqlConnectionStringBuilder()
-            {
-                DataSource = "ijfods31344.database.windows.net",
-                InitialCatalog = "wliha",
-                UserID = "wliha",
-                Password = "Quattro!",
-                MultipleActiveResultSets = true
-            }.ConnectionString);
+            _dbContext = context;
         }
 
         // GET: api/Permit
@@ -44,20 +38,11 @@ namespace WlihaHackPermit.Controllers
 			        LEFT JOIN [dbo].[PermitInfo]
 			        ON ((LOWER([dbo].[AddressInfo].[StreetAddress]) like LOWER([dbo].[PermitInfo].[OriginalAddress1]))) 
 				        and ([dbo].[AddressInfo].[ZipCode] = [dbo].[PermitInfo].[OriginalZip])))";
-            
-            SqlCommand cmd = new SqlCommand(query, connection);
-            SqlDataReader reader = cmd.ExecuteReader();
-            List<TenantInfo> tenantInfo = new List<TenantInfo>();
-
-            while (reader.Read())
+           
+            List<TenantInfo> tenantInfo =  _dbContext.DBTenantInfo.FromSql(query).ToListAsync().Result;
+            if(tenantInfo == null)
             {
-                TenantInfo t = new TenantInfo();
-                t.Name = reader["Name"].ToString();
-                t.Email = reader["Email"].ToString();
-                t.Id = (int)reader["Id"];
-                t.NumberOfPpl = (int)reader["NumberOfPpl"];
-                t.Phone = reader["Phone"].ToString();
-                tenantInfo.Add(t);
+                return new List<TenantInfo>();
             }
             return tenantInfo;
         }
@@ -78,22 +63,13 @@ namespace WlihaHackPermit.Controllers
 			        LEFT JOIN [dbo].[PermitInfo]
 			        ON ((LOWER([dbo].[AddressInfo].[StreetAddress]) like LOWER([dbo].[PermitInfo].[OriginalAddress1]))) 
 				        and ([dbo].[AddressInfo].[ZipCode] = [dbo].[PermitInfo].[OriginalZip])))";
-
-            SqlCommand cmd = new SqlCommand(query, connection);
-            SqlDataReader reader = cmd.ExecuteReader();
-            List<TenantInfo> tenantInfo = new List<TenantInfo>();
-
-            while (reader.Read())
+            List<TenantInfo> tenantInfo = _dbContext.DBTenantInfo.FromSql(query).ToListAsync().Result;
+            if (tenantInfo == null)
             {
-                TenantInfo t = new TenantInfo();
-                t.Name = reader["Name"].ToString();
-                t.Email = reader["Email"].ToString();
-                t.Id = (int)reader["Id"];
-                t.NumberOfPpl = (int)reader["NumberOfPpl"];
-                t.Phone = reader["Phone"].ToString();
-                tenantInfo.Add(t);
+                return new List<TenantInfo>();
             }
             return tenantInfo;
+
         }
 
         // GET api/Permit/address
@@ -113,15 +89,10 @@ namespace WlihaHackPermit.Controllers
                     LEFT JOIN [dbo].[EvictionInfo]
                     ON (LOWER([dbo].[EvictionInfo].[AddressId]) = LOWER([dbo].[AddressInfo].[Id])))";
 
-            SqlCommand cmd = new SqlCommand(query, connection);
-            SqlDataReader reader = cmd.ExecuteReader();
-            List<PermitInfo> permitInfo = new List<PermitInfo>();
-
-            while (reader.Read())
+            List<PermitInfo> permitInfo = _dbContext.DBPermitInfo.FromSql(query).ToListAsync().Result;
+            if (permitInfo == null)
             {
-                PermitInfo p = new PermitInfo();
-                
-                permitInfo.Add(p);
+                return new List<PermitInfo>();
             }
             return permitInfo;
         }
@@ -156,15 +127,10 @@ namespace WlihaHackPermit.Controllers
             FROM [dbo].[PermitInfo]
             WHERE LOWER(@address) = LOWER([dbo].[PermitInfo].[OriginalAddress])";
 
-            SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.Add(parameter);
-            SqlDataReader reader = cmd.ExecuteReader();
-            List<PermitInfo> permitInfo = new List<PermitInfo>();
-
-            while (reader.Read())
+            List<PermitInfo> permitInfo = _dbContext.DBPermitInfo.FromSql(query, parameter).ToListAsync().Result;
+            if (permitInfo == null)
             {
-                PermitInfo p = new PermitInfo();
-                permitInfo.Add(p);
+                return new List<PermitInfo>();
             }
             return permitInfo;
         }
