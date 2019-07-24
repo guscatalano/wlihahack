@@ -6,7 +6,12 @@
 //  zoom: 6
 //})
 
-var map = L.map('map').setView([47.751076, -120.740135], 7);
+var corner1 = L.latLng(45.541111, -124.111031),
+corner2 = L.latLng(49.113552, -116.882027),
+bounds = L.latLngBounds(corner2, corner1);
+
+var map = L.map('map').setView([47.4062, -119.8321], 7);
+
 
 // L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
