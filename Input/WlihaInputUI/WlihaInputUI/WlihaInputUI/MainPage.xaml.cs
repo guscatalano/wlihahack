@@ -8,24 +8,19 @@ using Xamarin.Forms;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
 using IO.Swagger.Client;
+using System.Net.NetworkInformation;
+using Plugin.Geolocator.Abstractions;
 
 namespace WlihaInputUI
 {
     public partial class MainPage : TabbedPage
     {
-        string _fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "notes.txt");
-
         public MainPage()
         {
             InitializeComponent();
 
             CameraButtonEviction.Clicked += CameraButtonEviction_ClickedAsync;
             CameraButtonLease.Clicked += CameraButtonLease_ClickedAsync;
-
-            if (File.Exists(_fileName))
-            {
-                //street.Text = File.ReadAllText(_fileName);
-            }
         }
 
         private void NextPageTenant_Clicked(object sender, EventArgs e)
@@ -85,13 +80,13 @@ namespace WlihaInputUI
         private async void CameraButtonLease_ClickedAsync(object sender, EventArgs e)
         {
             Take_Photo(LeasePhoto);
-	}
+        }
+        /*
         async void OnMapTestClicked(object sender, EventArgs e)
         {
-            String result = await AddressPicker.ModalPickAddress(Navigation, editor.Text);
-            await DisplayAlert("Picked Address", result, "OK");
+            
         }
-
+        */
         private async void Take_Photo(Xamarin.Forms.Image imageHolder)
         {/*
             var photo = await Plugin.Media.CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions() { });
@@ -167,18 +162,23 @@ namespace WlihaInputUI
         }*/
         }
 
-        /*void OnSaveButtonClicked(object sender, EventArgs e)
+        private async void MapButton_Clicked(object sender, EventArgs e)
         {
-            File.WriteAllText(_fileName, street.Text);
-        }
-
-        void OnDeleteButtonClicked(object sender, EventArgs e)
-        {
-            if (File.Exists(_fileName))
+            Address hint = new Address()
             {
-                File.Delete(_fileName);
+                streetAndNumber = addrStreet.Text,
+                city = addrCity.Text,
+                zipcode = addrZip.Text
+            };
+
+            Address result = await AddressPicker.ModalPickAddress(Navigation, hint);
+            if (result != null)
+            {
+                addrStreet.Text = result.streetAndNumber;
+                addrCity.Text = result.city;
+                addrZip.Text = result.zipcode;
             }
-            street.Text = string.Empty;
-        }*/
+
+        }
     }
 }

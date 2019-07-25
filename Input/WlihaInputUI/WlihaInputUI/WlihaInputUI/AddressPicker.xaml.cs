@@ -13,15 +13,39 @@ using Xamarin.Forms.Xaml;
 
 namespace WlihaInputUI
 {
+    public class Address
+    {
+        public string streetAndNumber;
+        public string city;
+        public string zipcode;
+
+        public override string ToString()
+        {
+            string result = streetAndNumber!=null ? streetAndNumber.Trim() : "";
+            if (!String.IsNullOrWhiteSpace(city))
+            {
+                if (!String.IsNullOrWhiteSpace(result)) result += ", ";
+                result += city;
+            }
+            if (!String.IsNullOrWhiteSpace(zipcode))
+            {
+                if (!String.IsNullOrWhiteSpace(zipcode)) result += ", ";
+                result += zipcode;
+            }
+            return result;
+        }
+    }
+
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddressPicker : ContentPage
     {
         private ExtendedMap map;
         private Pin activePin;
         private Geocoder geocoder;
-        private TaskCompletionSource<string> pickResult;
+        private TaskCompletionSource<Address> pickResult;
+        private List<Address> currentCandidates;
 
-        public static async Task<string> ModalPickAddress(INavigation where, String hint)
+        public static async Task<Address> ModalPickAddress(INavigation where, Address hint)
         {
             var picker = new AddressPicker(hint);
 
@@ -31,7 +55,7 @@ namespace WlihaInputUI
             return result;
         }
 
-        public AddressPicker(String hint)
+        public AddressPicker(Address hint)
         {
             InitializeComponent();
 
@@ -46,15 +70,15 @@ namespace WlihaInputUI
                 IsShowingUser = true
             };
             map.Tap += Map_Tap;
-            layout.Children.Insert(1, map);
+            layout.Children.Insert(0, map);
 
             activePin = new Pin();
             geocoder = new Geocoder();
-            pickResult = new TaskCompletionSource<string>();
+            pickResult = new TaskCompletionSource<Address>();
 
-            if ((hint!=null) && (hint != ""))
+            if ((hint!=null) && (hint.ToString() != ""))
             {
-                CrossGeolocator.Current.GetPositionsForAddressAsync(hint).ContinueWith(
+                CrossGeolocator.Current.GetPositionsForAddressAsync(hint.ToString()).ContinueWith(
                     (result) => Device.BeginInvokeOnMainThread(
                             () =>
                             {
@@ -92,7 +116,7 @@ namespace WlihaInputUI
 
         private void Map_Tap(object sender, TapEventArgs e)
         {
-            UpdatePosition(e.Position, map.VisibleRegion.Radius);
+            UpdatePosition(e.Position, map.VisibleRegion != null ? map.VisibleRegion.Radius : new Distance(300));
         }
 
         private void UpdatePosition(Xamarin.Forms.Maps.Position position, Distance radius)
@@ -118,19 +142,31 @@ namespace WlihaInputUI
 
         private void ResolveComplete(IEnumerable<Plugin.Geolocator.Abstractions.Address> addresses)
         {
+            currentCandidates = new List<Address>();
             alternativePicker.Items.Clear();
             foreach (var addr in addresses)
             {
-                alternativePicker.Items.Add(FormatAddress(addr));
+                Address a = new Address();
+                a.streetAndNumber = ((addr.SubThoroughfare ?? "") + " " + (addr.Thoroughfare ?? "")).Trim();
+                a.city = addr.Locality != null ? addr.Locality.Trim() : "";
+                a.zipcode = addr.PostalCode != null ? addr.PostalCode.Trim() : "";
+
+                if ((a.ToString() != "") && (!currentCandidates.Contains(a)))
+                {
+                    currentCandidates.Add(a);
+                    alternativePicker.Items.Add(a.ToString());
+                }
             }
 
-            if (addresses.Count() == 0)
+            if (currentCandidates.Count() == 0)
             {
-                alternativePicker.Items.Add("Failed to find address");
+                alternativePicker.Title = "Pick from map";
+                activePin.Label = "No address found";
                 accept.IsEnabled = false;
             }
             else
             {
+                alternativePicker.Title = "Select";
                 activePin.Label = alternativePicker.Items.First();
                 accept.IsEnabled = true;
             }
@@ -139,42 +175,8 @@ namespace WlihaInputUI
 
         private void Accept_Clicked(object sender, EventArgs e)
         {
-            pickResult.SetResult((string)alternativePicker.SelectedItem);
+            pickResult.SetResult(currentCandidates[alternativePicker.SelectedIndex]);
         }
 
-        private String FormatAddress(Plugin.Geolocator.Abstractions.Address address)
-        {
-            // option one: street number, street and city
-            if ((address.SubThoroughfare != null) && (address.Thoroughfare != null) && (address.Locality != null))
-            {
-                return address.SubThoroughfare + " " + address.Thoroughfare + ", " + address.Locality;
-            }
-            // option two: street and city only
-            else if ((address.Thoroughfare != null) && (address.Locality != null))
-            {
-                return address.Thoroughfare + ", " + address.Locality;
-            }
-            // option three: city + zip
-            else if ((address.Locality != null) && (address.PostalCode!=null))
-            {
-                return address.Locality + " " + address.PostalCode;
-            }
-            // option four: city + state
-            else if ((address.Locality != null) && (address.AdminArea != null))
-            {
-                return address.Locality + ", " + address.AdminArea;
-            }
-            // option five: city + country code
-            else if ((address.Locality != null) && (address.CountryCode != null))
-            {
-                return address.Locality + ", " + address.CountryCode;
-            }
-            // option six: concatenate fields
-            else
-            {
-                string[] fields = { address.SubThoroughfare, address.Thoroughfare, address.SubLocality, address.Locality, address.PostalCode, address.CountryCode, address.CountryName };
-                return String.Join(", ", fields);
-            }
-        }
     }
 }
