@@ -26,7 +26,6 @@ namespace WlihaHackEviction
             // Configure the DBContext
             services.AddDbContext<EvictionDatabaseContext>(options =>
                 options.UseSqlServer(connectionStringFromConfig));
-                //options.UseSqlServer(Configuration.GetConnectionString("SQLConnection")));
 
             services.AddCors();
 
