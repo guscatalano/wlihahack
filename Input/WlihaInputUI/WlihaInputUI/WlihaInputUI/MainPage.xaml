@@ -86,10 +86,14 @@
                 </StackLayout>
                 <StackLayout VerticalOptions="CenterAndExpand">
                 </StackLayout>
-                <StackLayout FlowDirection="LeftToRight" VerticalOptions="End">
-                    <Button Text="Use Map" x:Name="mapButton" HorizontalOptions="Start" Clicked="MapButton_Clicked"/>
-                    <Button Text="Next" x:Name="NextPageAddress" HorizontalOptions="End" Clicked="NextPageAddress_Clicked"/>
-                </StackLayout>
+                <Grid VerticalOptions="End">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="0.5*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Text="Use Map" Grid.Column="0" x:Name="mapButton" HorizontalOptions="Start" Clicked="MapButton_Clicked"/>
+                    <Button Text="Next" Grid.Column="1" x:Name="NextPageAddress" HorizontalOptions="End" Clicked="NextPageAddress_Clicked"/>
+                </Grid>
             </StackLayout>
         </ContentPage>
         <ContentPage x:Name="noticepage" Title="Eviction Notice">
