@@ -74,30 +74,20 @@
                 FontSize = "20" 
                 FontAttributes="Bold" />
                     <Entry x:Name="addrStreet"
-                Placeholder="Number and Street" />
+                Placeholder="Number and Street"/>
                     <Entry x:Name="addrUnit"
-                Placeholder="Unit" />
+                Placeholder="Unit"/>
                     <Entry x:Name="addrCity"
-                Placeholder="City" />
+                Placeholder="City"/>
                     <Entry x:Name="addrCounty"
-                Placeholder="County" />
+                Placeholder="County"/>
                     <Entry x:Name="addrZip"
-                Placeholder="Zip" />
-                    <!--<Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Button Text="Save"
-                    Clicked="OnSaveButtonClicked" />
-                    <Button Grid.Column="1"
-                    Text="Delete"
-                    Clicked="OnDeleteButtonClicked"/>
-                </Grid>-->
+                Placeholder="Zip"/>
                 </StackLayout>
                 <StackLayout VerticalOptions="CenterAndExpand">
                 </StackLayout>
-                <StackLayout VerticalOptions="End">
+                <StackLayout FlowDirection="LeftToRight" VerticalOptions="End">
+                    <Button Text="Use Map" x:Name="mapButton" HorizontalOptions="Start" Clicked="MapButton_Clicked"/>
                     <Button Text="Next" x:Name="NextPageAddress" HorizontalOptions="End" Clicked="NextPageAddress_Clicked"/>
                 </StackLayout>
             </StackLayout>

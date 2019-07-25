@@ -22,7 +22,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <AndroidKeyStore>true</AndroidKeyStore>
-    <AndroidSigningKeyStore>E:\mshack\wlihahack\Input\wlihahack.keystore</AndroidSigningKeyStore>
+    <AndroidSigningKeyStore>..\..\..\wlihahack.keystore</AndroidSigningKeyStore>
     <AndroidSigningStorePass>Hack123!</AndroidSigningStorePass>
     <AndroidSigningKeyAlias>debug</AndroidSigningKeyAlias>
     <AndroidSigningKeyPass>Hack123!</AndroidSigningKeyPass>
@@ -81,6 +81,15 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Plugin.CurrentActivity">
+      <Version>2.1.0.4</Version>
+    </PackageReference>
+    <PackageReference Include="Plugin.Permissions">
+      <Version>3.0.0.12</Version>
+    </PackageReference>
+    <PackageReference Include="Xam.Plugin.Geolocator">
+      <Version>4.5.0.6</Version>
+    </PackageReference>
     <PackageReference Include="Xam.Plugin.Media">
       <Version>4.0.1.5</Version>
     </PackageReference>

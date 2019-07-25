@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WlihaHackEviction.Models;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,9 +26,10 @@ namespace WlihaHackEviction.Controllers
 
         // GET: api/Tenant
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var tenants = await _dbContext.DBTenantInfo.ToListAsync();
+            return View(tenants);
         }
 
         // GET api/Tenant/5
@@ -47,6 +52,7 @@ namespace WlihaHackEviction.Controllers
             TenantInfo tenantInfo = info.TenantInfo;
             AddressInfo addressInfo = info.AddressInfo;
             EvictionInfo evictionInfo = info.EvictionInfo;
+            PreparerInfo preparerInfo = info.PreparerInfo;
 
             // Null-check for all required fields
             if (tenantInfo == null || addressInfo == null || evictionInfo == null)
@@ -74,6 +80,19 @@ namespace WlihaHackEviction.Controllers
             }
             try
             {
+                if(addressInfo.Latitude != 0.0D && addressInfo.Longitude != 0.0D)
+                { 
+                    string key = "***REMOVED***";
+                    string address = addressInfo.StreetAddress + addressInfo.City + addressInfo.ZipCode;
+                    Uri geoReqUri = new Uri(string.Format("http://dev.virtualearth.net/REST/v1/Locations?q={0}&key={1}", address, key));
+                    var client = new HttpClient();
+                    var responseTask = await client.GetAsync(geoReqUri);
+                    string responseString = await responseTask.Content.ReadAsStringAsync();
+
+                    var coordinates = JObject.Parse(responseString)["resourceSets"][0]["resources"][0]["point"]["coordinates"].Children().ToList();
+                    addressInfo.Latitude = coordinates[0].ToObject<double>();
+                    addressInfo.Longitude = coordinates[1].ToObject<double>();
+                }
                 _dbContext.DBAddressInfo.Add(addressInfo);
                 await _dbContext.SaveChangesAsync();
             }
@@ -93,9 +112,32 @@ namespace WlihaHackEviction.Controllers
 
             evictionInfo.AddressId = addressId;
             evictionInfo.TenantId = tenantId;
-            _dbContext.DBEvictionInfo.Add(evictionInfo);
-            await _dbContext.SaveChangesAsync();
 
+            if (preparerInfo != null && preparerInfo.Name != null && preparerInfo.Organization != null)
+            {
+                try
+                {
+                    _dbContext.DBPreparerInfo.Add(preparerInfo);
+                    await _dbContext.SaveChangesAsync();
+
+                    var preparerId = _dbContext.DBPreparerInfo
+                        .Where(p => p.Name == preparerInfo.Name && p.Organization == preparerInfo.Organization)
+                        .Select(p => p.Id)
+                        .FirstOrDefault();
+
+                    evictionInfo.PreparerId = preparerInfo.Id;
+                }
+                catch (Exception)
+                { }
+
+            }
+            try
+            {
+                _dbContext.DBEvictionInfo.Add(evictionInfo);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            { }
         }
 
         // PUT api/Tenant/5
