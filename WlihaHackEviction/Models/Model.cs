@@ -108,6 +108,8 @@ namespace WlihaHackEviction.Models
     public class PermitInfo
     {
         [DataMember]
+        public int Id { get; set; }
+        [DataMember]
         public string PermitNum { get; set; }
         [DataMember]
         public string PermitClass { get; set; }
