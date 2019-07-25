@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WlihaHackEviction.Models;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Rewrite;
+using System.Collections.Generic;
 
 namespace WlihaHackEviction
 {
@@ -50,7 +52,7 @@ namespace WlihaHackEviction
                 app.UseHsts();
             }
 
-            app.UseStaticFiles();
+            
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
@@ -59,12 +61,15 @@ namespace WlihaHackEviction
                 .AllowAnyMethod()
                 .AllowAnyHeader());
             app.UseHttpsRedirection();
-            app.UseMvc(routes =>
+
+            app.UseDefaultFiles(new DefaultFilesOptions
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                DefaultFileNames = new
+                List<string> { "index.html" }
             });
+
+            app.UseStaticFiles();
+            app.UseMvc();
         }
     }
 }
