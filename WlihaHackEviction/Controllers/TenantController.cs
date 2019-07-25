@@ -80,17 +80,19 @@ namespace WlihaHackEviction.Controllers
             }
             try
             {
-                string key = "AvXkzrVFf6T6psN8RHfu6BTg3Guho5Q4hWvHgMMVIvJn8csb10iS-U1lDhjG_5Af";
-                string address = addressInfo.StreetAddress + addressInfo.City + addressInfo.ZipCode;
-                Uri geoReqUri = new Uri(string.Format("http://dev.virtualearth.net/REST/v1/Locations?q={0}&key={1}", address, key));
-                var client = new HttpClient();
-                var responseTask = await client.GetAsync(geoReqUri);
-                string responseString = await responseTask.Content.ReadAsStringAsync();
+                if(addressInfo.Latitude != 0.0D && addressInfo.Longitude != 0.0D)
+                { 
+                    string key = "AvXkzrVFf6T6psN8RHfu6BTg3Guho5Q4hWvHgMMVIvJn8csb10iS-U1lDhjG_5Af";
+                    string address = addressInfo.StreetAddress + addressInfo.City + addressInfo.ZipCode;
+                    Uri geoReqUri = new Uri(string.Format("http://dev.virtualearth.net/REST/v1/Locations?q={0}&key={1}", address, key));
+                    var client = new HttpClient();
+                    var responseTask = await client.GetAsync(geoReqUri);
+                    string responseString = await responseTask.Content.ReadAsStringAsync();
 
-                var coordinates = JObject.Parse(responseString)["resourceSets"][0]["resources"][0]["point"]["coordinates"].Children().ToList();
-                addressInfo.Latitude = coordinates[0].ToObject<double>();
-                addressInfo.Longitude = coordinates[1].ToObject<double>();
-
+                    var coordinates = JObject.Parse(responseString)["resourceSets"][0]["resources"][0]["point"]["coordinates"].Children().ToList();
+                    addressInfo.Latitude = coordinates[0].ToObject<double>();
+                    addressInfo.Longitude = coordinates[1].ToObject<double>();
+                }
                 _dbContext.DBAddressInfo.Add(addressInfo);
                 await _dbContext.SaveChangesAsync();
             }
