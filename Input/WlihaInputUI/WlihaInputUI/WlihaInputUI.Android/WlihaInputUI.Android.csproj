@@ -22,7 +22,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <AndroidKeyStore>true</AndroidKeyStore>
-    <AndroidSigningKeyStore>E:\mshack\wlihahack\Input\wlihahack.keystore</AndroidSigningKeyStore>
+    <AndroidSigningKeyStore>..\..\..\wlihahack.keystore</AndroidSigningKeyStore>
     <AndroidSigningStorePass>Hack123!</AndroidSigningStorePass>
     <AndroidSigningKeyAlias>debug</AndroidSigningKeyAlias>
     <AndroidSigningKeyPass>Hack123!</AndroidSigningKeyPass>
