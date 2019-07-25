@@ -131,8 +131,13 @@ namespace WlihaHackEviction.Controllers
                 { }
 
             }
-            _dbContext.DBEvictionInfo.Add(evictionInfo);
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                _dbContext.DBEvictionInfo.Add(evictionInfo);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            { }
         }
 
         // PUT api/Tenant/5

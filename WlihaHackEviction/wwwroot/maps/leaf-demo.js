@@ -47,13 +47,20 @@ info.onAdd = function (map) {
     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
     this._div.style.width= "200px";
     this._div.style.height= "200px";
-    this.update({name: "s1", address: "a1"});
+    this.update({peopleAffected: "-1", address: "a1"});
     return this._div;
 };
 
 // method that we will use to update the control based on feature properties passed
 info.update = function (props) {
-    this._div.innerHTML = '<div>' + 'People Affected: ' + props.peopleAffected +'</div>' + '<div>' +'Address: ' + props.address + '</div>';
+    if (props.peopleAffected === "-1") {
+        this._div.innerHTML = 'Click on a marker to view eviction details.';
+
+    } else {
+        this._div.innerHTML = '<div><b>' + 'People Affected: </b>' + props.peopleAffected + '</div>'
+            + '<div><b>' + 'Address: </b>' + props.address + '</div>'
+            + '<div><b>' + 'Eviction Date: </b>' + props.evictionDate + '</div>';
+    }
 };
 
 info.addTo(map);
@@ -75,8 +82,8 @@ Http.onload = function() {
   addressPoints = evictionInfo.map(function (p) { 
     L.marker( [p.addressInfo.latitude,
                 p.addressInfo.longitude],
-                {icon: myIcon, title: p.numberOfPpl, alt: p.addressInfo.streetAddress } )
-    .on('click', function(e) { info.update({peopleAffected: e.target.options.title, address: e.target.options.alt}) })
+        { icon: myIcon, title: p.numberOfPpl, alt: p.addressInfo.streetAddress, pane: p.dateOfEviction } )
+    .on('click', function(e) { info.update({peopleAffected: e.target.options.title, address: e.target.options.alt, evictionDate: e.target.options.pane }) })
     .addTo( map );
   });
 
