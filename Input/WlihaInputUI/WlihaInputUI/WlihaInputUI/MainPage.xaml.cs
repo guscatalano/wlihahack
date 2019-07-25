@@ -10,6 +10,10 @@ using IO.Swagger.Model;
 using IO.Swagger.Client;
 using System.Net.NetworkInformation;
 using Plugin.Geolocator.Abstractions;
+using System.Net.Http;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace WlihaInputUI
 {
@@ -42,16 +46,84 @@ namespace WlihaInputUI
         }
 
         private void Submit_Clicked(object sender, EventArgs e)
-        {
-            TenantInfo ti = new TenantInfo(null, tenantName.Text, tenantEmail.Text , tenantPhone.Text, Int32.Parse(tenantCount.Text));
-            AddressInfo ai = new AddressInfo(null, addrStreet.Text, Int32.Parse(addrUnit.Text), addrCity.Text, addrCounty.Text, Int32.Parse(addrZip.Text), null, null);
-            EvictionInfo ei = new EvictionInfo(null, Convert.ToDateTime(evictionDate.Text));
-            CompleteTenantEvictionInfo cti = new CompleteTenantEvictionInfo(ti, ai, ei);
+        {/*
+            TenantApi tAPI = new TenantApi("http://neighborevictions.azurewebsites.net/api/Tenant");
+            */
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://neighborevictions.azurewebsites.net");
+                client.DefaultRequestHeaders
+      .Accept
+      .Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
+               // client.DefaultRequestHeaders.Add("Content-Type", "application/json");
+                string data = String.Format(
+                @"{{
+                    ""tenantInfo"":{{
+                        ""Name"":""{0}"",
+                        ""Email"":""{1}"",
+                        ""Phone"":""{2}"",
+                        ""NumberOfPpl"":{3}
+                    }},
+                    ""addressInfo"":{{
+                        ""StreetAddress"":""{4}"",
+                        ""Unit"":{5},
+                        ""City"":""{6}"",
+                        ""County"":""{7}"",
+                        ""Zipcode"":{8},
+                        ""Latitude"":{9},
+                        ""Longitude"":{10}
+                    }},
+                    ""evictionInfo"":{{
+                        ""DateofEviction"":""{11}""
+                    }}
+                }}", tenantName.Text, tenantEmail.Text, tenantPhone.Text, tenantCount.Text,
+                    addrStreet.Text, addrUnit.Text, addrCity.Text, addrCounty.Text, addrZip.Text, "45.1", "45.1",
+                    evictionDate.Text);
+                /*string data = String.Format(
+                @"{{
+                    ""tenantInfo"":{{
+                        ""Name"":""{0}"",
+                        ""Email"":""{1}"",
+                        ""Phone"":""{2}"",
+                        ""NumberOfPpl"":{3}
+                    }},
+                    ""addressInfo"":{{
+                        ""StreetAddress"":""{4}"",
+                        ""Unit"":{5},
+                        ""City"":""{6}"",
+                        ""County"":""{7}"",
+                        ""Zipcode"":{8},
+                        ""Latitude"":{9},
+                        ""Longitude"":{10}
+                    }},
+                    ""evictionInfo"":{{
+                        ""DateofEviction"":""{11}""
+                    }}
+                }}", "tony", "tony@tony.tony", 5555555555, 20,
+                    "321 tony st", 123, "tonyville", "tonytown", "98008", 45.1, 45.1,
+                    "7-24-2019");*/
+
+                StringContent queryString = new StringContent(data, Encoding.UTF8, "application/json");
+                var result = client.PostAsync("/api/Tenant", queryString).Result;
+                string resultContent = result.Content.ReadAsStringAsync().Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    DisplayAlert("Success", "Your submission has been accepted", "OK");
+                }
+                else {
+                    DisplayAlert("Failure", "There was a problem with your submission, please check the fields", "OK");
+                }
+               // return resultContent;
+            }
+
+            //TenantInfo ti = new TenantInfo(null, tenantName.Text, tenantEmail.Text , tenantPhone.Text, Int32.Parse(tenantCount.Text));
+            //AddressInfo ai = new AddressInfo(null, addrStreet.Text, Int32.Parse(addrUnit.Text), addrCity.Text, addrCounty.Text, Int32.Parse(addrZip.Text), null, null);
+            //EvictionInfo ei = new EvictionInfo(null, Convert.ToDateTime(evictionDate.Text));
+            //CompleteTenantEvictionInfo cti = new CompleteTenantEvictionInfo(ti, ai, ei);
             //Configuration config = new Configuration();
             //ApiClient apc = new ApiClient(config);
             //TenantApi tAPI = new TenantApi(config);
-            TenantApi tAPI = new TenantApi("http://neighborevictions.azurewebsites.net:44390/api/Tenant");
-            tAPI.ApiTenantPost(cti);
+            //tAPI.ApiTenantPost(cti);
 
             //Org fields
             //orgname
@@ -81,12 +153,7 @@ namespace WlihaInputUI
         {
             Take_Photo(LeasePhoto);
         }
-        /*
-        async void OnMapTestClicked(object sender, EventArgs e)
-        {
-            
-        }
-        */
+
         private async void Take_Photo(Xamarin.Forms.Image imageHolder)
         {/*
             var photo = await Plugin.Media.CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions() { });

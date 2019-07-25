@@ -15,7 +15,7 @@ using Android.Support.V4.App;
 [assembly: UsesFeature("android.hardware.camera.autofocus", Required = true)]
 namespace WlihaInputUI.Droid
 {
-    [Activity(Label = "WlihaInputUI", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "WlihaInputUI", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = false, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)

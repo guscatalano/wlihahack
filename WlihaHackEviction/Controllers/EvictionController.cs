@@ -21,24 +21,18 @@ namespace WlihaHackEviction.Controllers
 
         // GET: api/Eviction
         [HttpGet]
-        public List<CompleteTenantEvictionInfo> GetAllEvictions()
+        public List<EvictionResult> GetAllEvictions()
         {
-            List<CompleteTenantEvictionInfo> result = null;
+            List<EvictionResult> result = null;
             result = _dbContext.DBEvictionInfo.Join(_dbContext.DBTenantInfo,
                 evictionInfo => evictionInfo.TenantId,
                 tenantInfo => tenantInfo.Id,
                 (evictionInfo, tenantInfo) => new { tenantInfo, evictionInfo }
                 )
-                .Join(_dbContext.DBPreparerInfo,
-                evictionAndTenantInfo => evictionAndTenantInfo.evictionInfo.PreparerId,
-                preparerInfo => preparerInfo.Id,
-                (evictionAndTenantInfo, preparerInfo) => new { evictionAndTenantInfo, preparerInfo }
-                )
                 .Join(_dbContext.DBAddressInfo,
-                combinedInfo => combinedInfo.evictionAndTenantInfo.evictionInfo.AddressId,
+                combinedInfo => combinedInfo.evictionInfo.AddressId,
                 addressInfo => addressInfo.Id,
-                (combinedInfo, addressInfo) =>
-                new CompleteTenantEvictionInfo { EvictionInfo = combinedInfo.evictionAndTenantInfo.evictionInfo, AddressInfo = addressInfo, TenantInfo = combinedInfo.evictionAndTenantInfo.tenantInfo, PreparerInfo = combinedInfo.preparerInfo }
+                (combinedInfo, addressInfo) => new EvictionResult { AddressInfo = addressInfo, DateOfEviction = combinedInfo.evictionInfo.DateOfEviction, NumberOfPpl = combinedInfo.tenantInfo.NumberOfPpl }
                 ).ToList();
             return result;
         }
