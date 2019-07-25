@@ -1,0 +1,38 @@
+markers = [
+   {
+     "name": "Canada",
+     "url": "https://en.wikipedia.org/wiki/Canada",
+     "lat": 47.457436,
+     "lng": -121.858749
+   },
+   {
+    "name": "Canada",
+    "url": "https://en.wikipedia.org/wiki/Canada",
+    "lat": 45.590374,
+    "lng": -122.576965
+   },
+   {
+    "name": "Canada",
+    "url": "https://en.wikipedia.org/wiki/Canada",
+    "lat": 45.695595,
+    "lng": -122.49395
+   },
+   {
+    "name": "Canada",
+    "url": "https://en.wikipedia.org/wiki/Canada",
+    "lat": 47.561943,
+    "lng": -122.206146
+   },
+   {
+    "name": "Canada",
+    "url": "https://en.wikipedia.org/wiki/Canada",
+    "lat": 46.733456,
+    "lng": -120.412842
+   },
+   {
+    "name": "Canada",
+    "url": "https://en.wikipedia.org/wiki/Canada",
+    "lat": 47.6347503662109,
+    "lng": -122.136993408203
+   }
+];
