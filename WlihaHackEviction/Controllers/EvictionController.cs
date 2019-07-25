@@ -21,9 +21,9 @@ namespace WlihaHackEviction.Controllers
 
         // GET: api/Eviction
         [HttpGet]
-        public List<CompleteTenantEvictionInfo> GetAllEvictions()
+        public List<EvictionResult> GetAllEvictions()
         {
-            List<CompleteTenantEvictionInfo> result = null;
+            List<EvictionResult> result = null;
             result = _dbContext.DBEvictionInfo.Join(_dbContext.DBTenantInfo,
                 evictionInfo => evictionInfo.TenantId,
                 tenantInfo => tenantInfo.Id,
@@ -32,8 +32,7 @@ namespace WlihaHackEviction.Controllers
                 .Join(_dbContext.DBAddressInfo,
                 combinedInfo => combinedInfo.evictionInfo.AddressId,
                 addressInfo => addressInfo.Id,
-                (combinedInfo, addressInfo) =>
-                new CompleteTenantEvictionInfo { EvictionInfo = combinedInfo.evictionInfo, AddressInfo = addressInfo, TenantInfo = combinedInfo.tenantInfo }
+                (combinedInfo, addressInfo) => new EvictionResult { AddressInfo = addressInfo, DateOfEviction = combinedInfo.evictionInfo.DateOfEviction, NumberOfPpl = combinedInfo.tenantInfo.NumberOfPpl }
                 ).ToList();
             return result;
         }

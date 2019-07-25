@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using WlihaHackEviction.Models;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Rewrite;
+using System.Collections.Generic;
 
 namespace WlihaHackEviction
 {
@@ -33,6 +28,8 @@ namespace WlihaHackEviction
             // Configure the DBContext
             services.AddDbContext<EvictionDatabaseContext>(options =>
                 options.UseSqlServer(connectionStringFromConfig));
+
+            services.AddCors();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -55,10 +52,23 @@ namespace WlihaHackEviction
                 app.UseHsts();
             }
 
+            
+
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
-
+            app.UseCors(builder => builder
+                .SetIsOriginAllowed((origin) => { return true; }) // for now, allow any origin
+                .AllowAnyMethod()
+                .AllowAnyHeader());
             app.UseHttpsRedirection();
+
+            app.UseDefaultFiles(new DefaultFilesOptions
+            {
+                DefaultFileNames = new
+                List<string> { "index.html" }
+            });
+
+            app.UseStaticFiles();
             app.UseMvc();
         }
     }
