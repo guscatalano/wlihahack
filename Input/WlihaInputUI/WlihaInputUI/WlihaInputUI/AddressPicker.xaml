@@ -9,8 +9,7 @@
              >
   <ContentPage.Content>
         <StackLayout x:Name="layout" VerticalOptions="FillAndExpand">
-            <Label x:Name="prompt" Text="Pick address on map" />
-            <Picker x:Name="alternativePicker" Title="Pick address" IsVisible="True" />
+            <Picker x:Name="alternativePicker" Title="Pick from map" IsVisible="True" />
             <Button x:Name="accept" Text="Accept" IsEnabled="False" Clicked="Accept_Clicked"/>
       </StackLayout>
   </ContentPage.Content>
