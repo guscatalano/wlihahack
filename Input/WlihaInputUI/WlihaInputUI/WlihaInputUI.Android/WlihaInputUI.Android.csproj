@@ -23,9 +23,9 @@
     </NuGetPackageImportStamp>
     <AndroidKeyStore>true</AndroidKeyStore>
     <AndroidSigningKeyStore>..\..\..\wlihahack.keystore</AndroidSigningKeyStore>
-    <AndroidSigningStorePass>Hack123!</AndroidSigningStorePass>
+    <AndroidSigningStorePass>keygoeshere</AndroidSigningStorePass>
     <AndroidSigningKeyAlias>debug</AndroidSigningKeyAlias>
-    <AndroidSigningKeyPass>Hack123!</AndroidSigningKeyPass>
+    <AndroidSigningKeyPass>keygoeshere</AndroidSigningKeyPass>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

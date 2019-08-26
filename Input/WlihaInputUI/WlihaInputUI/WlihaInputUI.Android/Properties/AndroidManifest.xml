@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.companyname.WlihaInputUI" android:installLocation="auto">
   <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
 	<application android:label="WLIHA Evictions">
-		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBFf95FynaLaxo3XFyQFvsTqjGEnnQylAk" />
+		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="keygoeshere" />
 		<provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.fileprovider" android:exported="false" android:grantUriPermissions="true">
 			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"></meta-data>
       </provider>
