@@ -82,7 +82,7 @@ namespace WlihaHackEviction.Controllers
             {
                 if(addressInfo.Latitude != 0.0D && addressInfo.Longitude != 0.0D)
                 { 
-                    string key = "***REMOVED***";
+                    string key = "keygoeshere";
                     string address = addressInfo.StreetAddress + addressInfo.City + addressInfo.ZipCode;
                     Uri geoReqUri = new Uri(string.Format("http://dev.virtualearth.net/REST/v1/Locations?q={0}&key={1}", address, key));
                     var client = new HttpClient();
